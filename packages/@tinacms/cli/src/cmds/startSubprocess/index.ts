@@ -43,5 +43,14 @@ stack: ${code.stack || 'No stack was provided'}`)
       logger.info(`child process exited with code ${code}`)
       process.exit(code)
     })
+    const signals = ['SIGINT', 'SIGTERM', 'SIGQUIT', 'SIGHUP']
+
+    signals.forEach(signal => {
+      process.on(signal, () => {
+        logger.info(`recieved ${signal}, killing child process`)
+        ps.kill(signal)
+        process.exit(0)
+      });
+    });
   }
 }
